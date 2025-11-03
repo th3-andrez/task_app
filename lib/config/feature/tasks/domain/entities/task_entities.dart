@@ -1,8 +1,10 @@
+import 'package:task_app/config/feature/tasks/task.dart';
+
 class Task {
-   final String id;
-   final String title;
-   final String? description;
-    String status;
+    String id;
+    String title;
+    String? description;
+    TaskStatus status;
 
   Task({
     required this.id,
@@ -16,7 +18,7 @@ class Task {
       id: json['id'],
       title: json['title'],
       description: json['description'],
-      status: json['status'],
+      status: TaskStatus.fromApi(json['status']),
     );
   }
 }

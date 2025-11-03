@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:task_app/config/feature/task/domain/entities/task_entities.dart';
+import 'package:task_app/config/feature/tasks/domain/entities/task_entities.dart';
 
 class TaskDataSource {
   final String baseUrl;

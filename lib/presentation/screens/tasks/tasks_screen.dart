@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import '../../../config/feature/task/task.dart';
+import 'package:task_app/presentation/widgets/create_task_buttun.dart';
+import 'package:task_app/presentation/widgets/task_item_widget.dart';
+import '../../../config/feature/tasks/task.dart';
 
 
 class TaskScreen extends StatefulWidget {
-  final TaskDataSource dataSource;
-
-  const TaskScreen({super.key, required this.dataSource});
+  final TaskRepository repository;
+  const TaskScreen({super.key, required this.repository});
 
   @override
   State<TaskScreen> createState() => _TaskScreenState();
@@ -17,13 +18,20 @@ class _TaskScreenState extends State<TaskScreen> {
   @override
   void initState() {
     super.initState();
-    futureTasks = widget.dataSource.getAllTasks();
+    _loadTasks();
+  }
+
+  void _loadTasks() {
+    futureTasks = widget.repository.getAllTasks();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Mis Tareas')),
+      appBar: AppBar(
+        title: const Text('Mis Tareas'),
+        centerTitle: true,
+      ),
       body: FutureBuilder<List<Task>>(
         future: futureTasks,
         builder: (context, snapshot) {
@@ -33,14 +41,7 @@ class _TaskScreenState extends State<TaskScreen> {
               itemCount: tasks.length,
               itemBuilder: (context, index) {
                 final task = tasks[index];
-                return ListTile(
-                  title: Text(task.title),
-                  subtitle: task.description != null ? Text(task.description!) : null,
-                  trailing: Icon(
-                    task.status == 'COMPLETED' ? Icons.check_circle : Icons.circle_outlined,
-                    color: task.status == 'COMPLETED' ? Colors.green : Colors.grey,
-                  ),
-                );
+                return TaskItemWidget(task: task); // ← SOLO VISUAL
               },
             );
           } else if (snapshot.hasError) {
@@ -48,6 +49,10 @@ class _TaskScreenState extends State<TaskScreen> {
           }
           return const Center(child: CircularProgressIndicator());
         },
+      ),
+      floatingActionButton: CreateTaskButton(
+        repository: widget.repository,
+        onTaskCreated: () => setState(() => _loadTasks()),
       ),
     );
   }
