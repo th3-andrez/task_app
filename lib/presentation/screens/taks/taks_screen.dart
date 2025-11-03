@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../config/feature/taks/taks.dart';
+import '../../../config/feature/task/task.dart';
 
 
 class TaskScreen extends StatefulWidget {

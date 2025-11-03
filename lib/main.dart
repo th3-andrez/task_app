@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:task_app/config/feature/taks/taks.dart';
+import 'package:task_app/config/feature/task/task.dart';
 import 'package:task_app/config/theme/app_theme.dart';
-import 'package:task_app/presentation/screens/taks/taksScreen.dart';
+import 'package:task_app/presentation/screens/taks/taks_screen.dart';
 
 void main() {
   runApp(const  MainApp());

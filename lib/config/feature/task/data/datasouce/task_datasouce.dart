@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:task_app/config/feature/taks/entitys/task_Entitys.dart';
+import 'package:task_app/config/feature/task/domain/entitys/task_Entitys.dart';
 
 abstract class TaskDataSource {
   Future<List<Task>> getAllTasks();
