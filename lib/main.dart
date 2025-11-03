@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:task_app/config/theme/app_theme.dart';
 
 void main() {
-  runApp(  MainApp());
+  runApp(const  MainApp());
 }
 
 class MainApp extends StatelessWidget{
@@ -11,10 +12,8 @@ class MainApp extends StatelessWidget{
     Widget build(BuildContext context) {
         return MaterialApp(
             debugShowCheckedModeBanner: false,
-            home: Scaffold(
-                appBar: AppBar(
-                    title: Text('Main App'),
-                ),
+            theme: AppTheme(selectedColor: 0).getTheme(),
+            home: const Scaffold(
                 body: Center(
                     child: Text('Hello, World!'),
                 ),
