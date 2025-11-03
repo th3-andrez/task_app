@@ -1,4 +1,4 @@
 //archivo de barril
 
-export 'domain/entitys/task_Entitys.dart';
+export 'domain/entities/task_entities.dart';
 export 'data/datasouce/task_datasouce.dart';

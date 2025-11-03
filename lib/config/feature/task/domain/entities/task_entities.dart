@@ -1,8 +1,8 @@
 class Task {
-   String id;
-   String title;
-   String? description;
-   String status;
+   final String id;
+   final String title;
+   final String? description;
+    String status;
 
   Task({
     required this.id,
