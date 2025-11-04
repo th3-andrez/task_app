@@ -5,7 +5,18 @@ import '../../../config/feature/tasks/task.dart';
 
 class TaskScreen extends StatefulWidget {
   final TaskRepository repository;
-  const TaskScreen({super.key, required this.repository});
+  final bool isDarkmode;
+  final VoidCallback onToggleDarkmode;
+  final int selectedColor;
+  final ValueChanged<int> onColorChanged;
+
+  const TaskScreen({super.key,
+   required this.repository,
+   required this.isDarkmode,
+   required this.onToggleDarkmode,
+   required this.selectedColor,
+   required this.onColorChanged,
+  });
 
   @override
   State<TaskScreen> createState() => _TaskScreenState();
@@ -30,7 +41,14 @@ class _TaskScreenState extends State<TaskScreen> {
       appBar: AppBar(
         title: const Text('Mis Tareas'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: Icon( widget.isDarkmode ? Icons.dark_mode : Icons.light_mode),
+            onPressed: widget.onToggleDarkmode,
+          ),
+        ],
       ),
+      
       body: FutureBuilder<List<Task>>(
         future: futureTasks,
         builder: (context, snapshot) {
