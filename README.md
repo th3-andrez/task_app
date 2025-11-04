@@ -15,13 +15,17 @@ For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
 
+## instrucciones del creador
+
 antes de ejecutar la aplicacion asegurse de ejercutar el backend de taks con el:
 
--npm run start: dev
+$ npm run start: dev
 
 se recomiendo instalar el flutter_dotenv para la aplicacion y el .env https://pub.dev/packages/flutter_dotenv
 
--flutter pub add flutter_dotenv
+$ flutter pub add flutter_dotenv
+
+revisar el .env.example
 
 en caso que no habra la aplicacion de forma normal, abrir el emulador de android studio de forma manual
 
