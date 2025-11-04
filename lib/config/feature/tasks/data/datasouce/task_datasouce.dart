@@ -2,11 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:task_app/config/feature/tasks/domain/entities/task_entities.dart';
 import 'package:task_app/config/feature/tasks/domain/enums/task_status.dart';
+import 'package:task_app/config/api_config.dart';
 
 class TaskDataSource {
-  final String baseUrl;
-
-  TaskDataSource({required this.baseUrl});
+  final String baseUrl = ApiConfig.baseUrl;
 
   Future<List<Task>> getAllTasks() async {
     final response = await http.get(Uri.parse('$baseUrl/tasks'));

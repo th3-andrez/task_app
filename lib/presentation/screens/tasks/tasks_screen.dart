@@ -37,6 +37,12 @@ class _TaskScreenState extends State<TaskScreen> {
           if (snapshot.hasData) {
             final tasks = snapshot.data!;
             return ListView.builder(
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 8,
+                bottom: MediaQuery.of(context).padding.bottom + 80,
+              ),
               itemCount: tasks.length,
               itemBuilder: (context, index) {
                 final task = tasks[index];
