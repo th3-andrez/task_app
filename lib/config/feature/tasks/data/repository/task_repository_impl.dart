@@ -24,7 +24,12 @@ class TaskRepositoryImpl implements TaskRepository {
   }
 
   @override
-Future<Task> updateStatus(String id, TaskStatus status) {
-  return dataSource.updateStatus(id, status);
-}
+  Future<Task> updateStatus(String id, TaskStatus status) {
+    return dataSource.updateStatus(id, status);
+  }
+
+  @override
+  Future<void> deleteTask(String id) {
+    return dataSource.deleteTask(id);
+  }
 }

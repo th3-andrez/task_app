@@ -25,18 +25,17 @@ class TaskItemWidget extends StatelessWidget {
         leading: Checkbox(
           value: isCompleted,
           onChanged: (value) async {
-            final newStatus = value == true ? TaskStatus.completed
+            final newStatus = value == true
+                ? TaskStatus.completed
                 : TaskStatus.pending;
             try {
               await repository.updateStatus(task.id, newStatus);
 
-              if (context.mounted){
+              if (context.mounted) {
                 onUpdated();
               }
-              
             } catch (e) {
-
-              if(context.mounted){
+              if (context.mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Error al actualizar el estado: $e'),
@@ -44,7 +43,6 @@ class TaskItemWidget extends StatelessWidget {
                   ),
                 );
               }
-              
             } // ← LLAMA AL CALLBACK
           },
         ),
@@ -76,8 +74,48 @@ class TaskItemWidget extends StatelessWidget {
               onUpdated(); // ← LLAMA AL CALLBACK
             }
           },
-          onDelete: () {
-            // Próximamente
+          onDelete: () async {
+            final confirm = await showDialog<bool>(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Text('Confirmar eliminación'),
+                content: Text(
+                  '¿Estás seguro de que deseas eliminar esta tarea ${task.title}?',
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx, false),
+                    child: const Text('Cancelar'),
+                  ),
+                  TextButton(
+                    onPressed: () => Navigator.pop(ctx, true),
+                    child: const Text('Tarea Eliminada'),
+                  ),
+                ],
+              ),
+            );
+            if (confirm == true && context.mounted) {
+              try {
+                await repository.deleteTask(task.id);
+                if (context.mounted) {
+                  onUpdated();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Tarea eliminada correctamente'),
+                      backgroundColor: Colors.green),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error al eliminar la tarea: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            }
           },
         ),
       ),

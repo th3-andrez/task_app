@@ -63,4 +63,15 @@ class TaskDataSource {
     }
     throw Exception('Error al actualizar estado');
   }
+
+  Future<void> deleteTask(String id) async {
+  final response = await http.delete(
+    Uri.parse('$baseUrl/tasks/$id'),
+    headers: {'Content-Type': 'application/json'},
+  );
+
+  if (response.statusCode != 200 && response.statusCode != 204) {
+    throw Exception('Error al eliminar: ${response.statusCode}');
+  }
+}
 }
