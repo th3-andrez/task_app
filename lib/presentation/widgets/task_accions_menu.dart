@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class TaskActionsMenu extends StatelessWidget {
+  final VoidCallback onView;
   final VoidCallback onEdit;
   final VoidCallback onDelete;
 
   const TaskActionsMenu({
     super.key,
+    required this.onView,
     required this.onEdit,
     required this.onDelete,
   });
@@ -14,38 +16,35 @@ class TaskActionsMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
       icon: const Icon(Icons.more_vert),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      elevation: 8,
-      offset: const Offset(0, 40),
       onSelected: (value) {
-        if (value == 'edit') {
-          onEdit();
-        } else if (value == 'delete') {
-          onDelete();
-        }
+        if (value == 'view') onView();
+        if (value == 'edit') onEdit();
+        if (value == 'delete') onDelete();
       },
       itemBuilder: (context) => [
         const PopupMenuItem(
+          value: 'view',
+          child: Row(children: [
+            Icon(Icons.visibility, color: Colors.blue, size: 20),
+            SizedBox(width: 8),
+            Text('Ver tarea', style: TextStyle(color: Colors.blue)),
+          ]),
+        ),
+        const PopupMenuItem(
           value: 'edit',
-          child: Row(
-            children: [
-              Icon(Icons.edit, color: Colors.blue, size: 20),
-              SizedBox(width: 8),
-              Text('Editar', style: TextStyle(color: Colors.blue)),
-            ],
-          ),
+          child: Row(children: [
+            Icon(Icons.edit, color: Colors.orange, size: 20),
+            SizedBox(width: 8),
+            Text('Editar', style: TextStyle(color: Colors.orange)),
+          ]),
         ),
         const PopupMenuItem(
           value: 'delete',
-          child: Row(
-            children: [
-              Icon(Icons.delete, color: Colors.red, size: 20),
-              SizedBox(width: 8),
-              Text('Eliminar', style: TextStyle(color: Colors.red)),
-            ],
-          ),
+          child: Row(children: [
+            Icon(Icons.delete, color: Colors.red, size: 20),
+            SizedBox(width: 8),
+            Text('Eliminar', style: TextStyle(color: Colors.red)),
+          ]),
         ),
       ],
     );

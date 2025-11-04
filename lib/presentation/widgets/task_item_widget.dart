@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:task_app/config/feature/tasks/task.dart';
 import 'package:task_app/presentation/screens/tasks/edit_tasks_screen.dart';
+import 'package:task_app/presentation/screens/tasks/view_task_screen.dart';
 import 'package:task_app/presentation/widgets/task_accions_menu.dart';
 
 class TaskItemWidget extends StatelessWidget {
@@ -62,26 +63,29 @@ class TaskItemWidget extends StatelessWidget {
               )
             : null,
         trailing: TaskActionsMenu(
+          onView: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => ViewTaskScreen(task: task),
+              ),
+            );
+          },
           onEdit: () async {
             final result = await Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (_) =>
-                    EditTaskScreen(task: task, repository: repository),
+                builder: (_) => EditTaskScreen(task: task, repository: repository),
               ),
             );
-            if (result == true) {
-              onUpdated(); // ← LLAMA AL CALLBACK
-            }
+            if (result == true) onUpdated();
           },
           onDelete: () async {
             final confirm = await showDialog<bool>(
-              context: context,
-              builder: (ctx) => AlertDialog(
-                title: const Text('Confirmar eliminación'),
-                content: Text(
-                  '¿Estás seguro de que deseas eliminar esta tarea ${task.title}?',
-                ),
+              context: context, // ← AÑADE "context:"
+              builder: (ctx) => AlertDialog( // ← AÑADE "builder:"
+                title: const Text('¿Eliminar tarea?'),
+                content: Text('"${task.title}" se eliminará permanentemente.'),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(ctx, false),
@@ -89,29 +93,26 @@ class TaskItemWidget extends StatelessWidget {
                   ),
                   TextButton(
                     onPressed: () => Navigator.pop(ctx, true),
-                    child: const Text('Tarea Eliminada'),
+                    style: TextButton.styleFrom(foregroundColor: Colors.red),
+                    child: const Text('Eliminar'),
                   ),
                 ],
               ),
             );
+
             if (confirm == true && context.mounted) {
               try {
                 await repository.deleteTask(task.id);
                 if (context.mounted) {
                   onUpdated();
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Tarea eliminada correctamente'),
-                      backgroundColor: Colors.green),
+                    const SnackBar(content: Text('Tarea eliminada'), backgroundColor: Colors.green),
                   );
                 }
               } catch (e) {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Error al eliminar la tarea: $e'),
-                      backgroundColor: Colors.red,
-                    ),
+                    SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red),
                   );
                 }
               }
