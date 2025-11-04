@@ -33,4 +33,4 @@ more actions => Virtual Device Manager => ejecuta el emulado
 
 abrir terminal en flutter y escribir
 
--flutter run
+$ flutter run
