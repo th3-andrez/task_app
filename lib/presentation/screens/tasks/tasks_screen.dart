@@ -3,7 +3,6 @@ import 'package:task_app/presentation/widgets/create_task_buttun.dart';
 import 'package:task_app/presentation/widgets/task_item_widget.dart';
 import '../../../config/feature/tasks/task.dart';
 
-
 class TaskScreen extends StatefulWidget {
   final TaskRepository repository;
   const TaskScreen({super.key, required this.repository});
@@ -41,7 +40,11 @@ class _TaskScreenState extends State<TaskScreen> {
               itemCount: tasks.length,
               itemBuilder: (context, index) {
                 final task = tasks[index];
-                return TaskItemWidget(task: task); // ← SOLO VISUAL
+                return TaskItemWidget(
+                  task: task,
+                  repository: widget.repository,     // ← PASA REPOSITORY
+                  onUpdated: () => setState(() => _loadTasks()), // ← RECARGA
+                );
               },
             );
           } else if (snapshot.hasError) {

@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:task_app/config/feature/tasks/task.dart';
+import 'package:task_app/presentation/screens/tasks/edit_tasks_screen.dart';
+import 'package:task_app/presentation/widgets/task_accions_menu.dart';
 
 class TaskItemWidget extends StatelessWidget {
   final Task task;
+  final TaskRepository repository;
+  final VoidCallback onUpdated; // ← AÑADE ESTO
 
   const TaskItemWidget({
     super.key,
     required this.task,
+    required this.repository,
+    required this.onUpdated, // ← Y AQUÍ
   });
 
   @override
@@ -16,41 +22,64 @@ class TaskItemWidget extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: ListTile(
-        // ICONO DE ESTADO (solo visual)
-        leading: Icon(
-          isCompleted ? Icons.check_circle : Icons.radio_button_unchecked,
-          color: isCompleted ? Colors.green : Colors.grey,
+        leading: Checkbox(
+          value: isCompleted,
+          onChanged: (value) async {
+            final newStatus = value == true ? TaskStatus.completed
+                : TaskStatus.pending;
+            try {
+              await repository.updateStatus(task.id, newStatus);
+
+              if (context.mounted){
+                onUpdated();
+              }
+              
+            } catch (e) {
+
+              if(context.mounted){
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('Error al actualizar el estado: $e'),
+                    backgroundColor: Colors.red,
+                  ),
+                );
+              }
+              
+            } // ← LLAMA AL CALLBACK
+          },
         ),
 
-        // TÍTULO
         title: Text(
           task.title,
           style: TextStyle(
             decoration: isCompleted ? TextDecoration.lineThrough : null,
             color: isCompleted ? Colors.grey : null,
-            fontWeight: FontWeight.w500,
           ),
         ),
-
-        // DESCRIPCIÓN
         subtitle: task.description != null
             ? Text(
                 task.description!,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  color: isCompleted ? Colors.grey : null,
-                ),
               )
             : null,
-
-        // ICONO FINAL (opcional)
-        trailing: isCompleted
-            ? const Text(
-                'Completada',
-                style: TextStyle(color: Colors.green, fontSize: 12),
-              )
-            : null,
+        trailing: TaskActionsMenu(
+          onEdit: () async {
+            final result = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) =>
+                    EditTaskScreen(task: task, repository: repository),
+              ),
+            );
+            if (result == true) {
+              onUpdated(); // ← LLAMA AL CALLBACK
+            }
+          },
+          onDelete: () {
+            // Próximamente
+          },
+        ),
       ),
     );
   }

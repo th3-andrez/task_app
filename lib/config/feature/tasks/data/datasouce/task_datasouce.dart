@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:task_app/config/feature/tasks/domain/entities/task_entities.dart';
+import 'package:task_app/config/feature/tasks/domain/enums/task_status.dart';
 
 class TaskDataSource {
   final String baseUrl;
@@ -29,5 +30,37 @@ class TaskDataSource {
       return Task.fromJson(json.decode(response.body));
     }
     throw Exception('Error al crear');
+  }
+
+  Future<Task> updateTask(String id, String title, [String? description]) async {
+    final response = await http.patch(
+      Uri.parse('$baseUrl/tasks/$id'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({
+        'title': title,
+        if (description != null) 'description': description,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      return Task.fromJson(json.decode(response.body));
+    } else if (response.statusCode == 404) {
+      throw Exception('Tarea no encontrada');
+    } else {
+      throw Exception('Error al actualizar: ${response.statusCode}');
+    }
+  }
+
+  Future<Task> updateStatus(String id, TaskStatus status) async {
+    final response = await http.patch(
+      Uri.parse('$baseUrl/tasks/$id'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode({'status': status.toApi()}), // "COMPLETED"
+    );
+
+    if (response.statusCode == 200) {
+      return Task.fromJson(json.decode(response.body));
+    }
+    throw Exception('Error al actualizar estado');
   }
 }
