@@ -48,6 +48,7 @@ class MainApp extends StatefulWidget {
       theme: AppTheme(selectedColor: selectedColor, isDarkMode: false).getTheme(),
       darkTheme: AppTheme(selectedColor: selectedColor, isDarkMode: true).getTheme(),
       themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
+
       home: TaskScreen(
         repository: repository,
         onToggleDarkmode: toggleDarkmode,

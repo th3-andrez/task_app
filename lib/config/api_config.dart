@@ -1,5 +1,6 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+// configuracion hibrida para obtener la URL de la API
 class ApiConfig {
   static String get baseUrl {
     // 1. PRIORIDAD: --dart-define (móvil, ngrok, producción)

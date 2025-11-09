@@ -25,9 +25,8 @@ class _CreateTaskScreenState extends State<CreateTaskScreen> {
     try {
       await widget.repository.createTask(
         _titleController.text.trim(),
-        _descriptionController.text.trim().isEmpty
-            ? null
-            : _descriptionController.text.trim(),
+        _descriptionController.text.trim().isEmpty ? null
+        : _descriptionController.text.trim(),
       );
 
       if (mounted) {

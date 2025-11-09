@@ -7,22 +7,25 @@ import 'package:task_app/presentation/widgets/task_accions_menu.dart';
 class TaskItemWidget extends StatelessWidget {
   final Task task;
   final TaskRepository repository;
-  final VoidCallback onUpdated; // ← AÑADE ESTO
+  final VoidCallback onUpdated; 
 
   const TaskItemWidget({
     super.key,
     required this.task,
     required this.repository,
-    required this.onUpdated, // ← Y AQUÍ
+    required this.onUpdated,
   });
 
   @override
   Widget build(BuildContext context) {
     final isCompleted = task.status == TaskStatus.completed;
+    final theme = Theme.of(context);
+
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
       child: ListTile(
+        //checkbox para marcar como completada o pendiente
         leading: Checkbox(
           value: isCompleted,
           onChanged: (value) async {
@@ -40,11 +43,11 @@ class TaskItemWidget extends StatelessWidget {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text('Error al actualizar el estado: $e'),
-                    backgroundColor: Colors.red,
+                    backgroundColor: theme.colorScheme.error,
                   ),
                 );
               }
-            } // ← LLAMA AL CALLBACK
+            } 
           },
         ),
 
@@ -52,16 +55,24 @@ class TaskItemWidget extends StatelessWidget {
           task.title,
           style: TextStyle(
             decoration: isCompleted ? TextDecoration.lineThrough : null,
-            color: isCompleted ? Colors.grey : null,
+            //color del  tema
+            color: isCompleted ? theme.disabledColor : null,
+            fontWeight: FontWeight.w500,
           ),
         ),
+        //subtitle si tiene descripcion
         subtitle: task.description != null
             ? Text(
                 task.description!,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
+                //cambio al color del tema de la descripcion
+                style: TextStyle(
+                  color: isCompleted ? theme.disabledColor:theme.textTheme.bodyMedium?.color,
+                ),
               )
             : null,
+            //menu de acciones
         trailing: TaskActionsMenu(
           onView: () {
             Navigator.push(
@@ -71,6 +82,7 @@ class TaskItemWidget extends StatelessWidget {
               ),
             );
           },
+          //editar tarea
           onEdit: () async {
             final result = await Navigator.push(
               context,
@@ -80,10 +92,11 @@ class TaskItemWidget extends StatelessWidget {
             );
             if (result == true) onUpdated();
           },
+          //eliminar tarea
           onDelete: () async {
             final confirm = await showDialog<bool>(
-              context: context, // ← AÑADE "context:"
-              builder: (ctx) => AlertDialog( // ← AÑADE "builder:"
+              context: context,
+              builder: (ctx) => AlertDialog(
                 title: const Text('¿Eliminar tarea?'),
                 content: Text('"${task.title}" se eliminará permanentemente.'),
                 actions: [
